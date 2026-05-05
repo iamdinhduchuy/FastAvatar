@@ -5,18 +5,15 @@ const registerCreateCommand: IRegisterCommandFunction = (program) => {
     .command("create")
     .description("Create a new avatar configuration file")
     .option(
-      "-o",
-      "--output <path>",
+      "-o, --output <path>",
       "Specify the output path for the avatar configuration file",
     )
     .option(
-      "-l",
-      "--league",
+      "-l, --league",
       "Use to want the format of the avatar is a eSports League",
     )
     .option(
-      "-p",
-      "--padding <number>",
+      "-p, --padding <number>",
       "Specify the padding around the avatar image when league flag",
     )
     .action((options) => CreateLogicCommand({ ...options }));

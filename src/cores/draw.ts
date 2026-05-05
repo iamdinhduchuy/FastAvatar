@@ -57,7 +57,7 @@ export async function createTeamTableImage(data: TeamData, outputPath: string) {
   const HEADER_BLACK_BAR_HEIGHT = 150;
   const HEADER_HEIGHT = 150;
   const ROW_HEIGHT = 150;
-  const FONT_FAMILY = "GFF_LATIN_BOLD";
+  const FONT_FAMILY = "Arial";
 
   const totalHeight =
     HEADER_BLACK_BAR_HEIGHT + HEADER_HEIGHT + data.length * ROW_HEIGHT;

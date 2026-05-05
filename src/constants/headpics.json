@@ -1,98 +1,56 @@
 {
-  "902000006": {
-    "characterName": "ANDREW",
-    "headPics": "902000006"
-  },
-  "902000007": {
-    "characterName": "KELLY",
-    "headPics": "902000007"
-  },
-  "902000008": {
-    "characterName": "OLIVA",
-    "headPics": "902000008"
-  },
-  "902000009": {
-    "characterName": "FORD",
-    "headPics": "902000009"
-  },
-  "902000010": {
-    "characterName": "NIKITA",
-    "headPics": "902000010"
-  },
-  "902000012": {
-    "characterName": "MISHA",
-    "headPics": "902000012"
-  },
-  "902000030": {
-    "characterName": "MAXIM",
-    "headPics": "902000030"
-  },
-  "902000062": {
-    "characterName": "KLA",
-    "headPics": "902000062"
-  },
-  "902000080": {
-    "characterName": "PALOMA",
-    "headPics": "902000080"
-  },
-  "902000081": {
-    "characterName": "MIGUEL",
-    "headPics": "902000081"
-  },
-  "902000096": {
-    "characterName": "CAROLINE",
-    "headPics": "902000096"
-  },
-  "902000102": {
-    "characterName": "ANTONIO",
-    "headPics": "902000102"
-  },
-  "902000110": {
-    "characterName": "WUKONG",
-    "headPics": "902000110"
-  },
-  "902000119": {
-    "characterName": "MOCO",
-    "headPics": "902000119"
-  },
-  "902000130": {
-    "characterName": "HAYATO",
-    "headPics": "902000130"
-  },
-  "902000167": {
-    "characterName": "LAURA",
-    "headPics": "902000167"
-  },
-  "902000182": {
-    "characterName": "RAFEAL",
-    "headPics": "902000182"
-  },
-  "902000201": {
-    "characterName": "A124",
-    "headPics": "902000201"
-  },
-  "902000202": {
-    "characterName": "JOSHEP",
-    "headPics": "902000202"
-  },
-  "902000219": {
-    "characterName": "SHANI",
-    "headPics": "902000219"
-  },
-  "902000220": {
-    "characterName": "ALOK",
-    "headPics": "902000220"
-  },
-  "902000239": {
-    "characterName": "NOTORA",
-    "headPics": "902000239"
-  },
-  "902000240": {
-    "characterName": "ALVARO",
-    "headPics": "902000240"
-  },
-  "902000278": {
-    "characterName": "JOTA",
-    "headPics": "902000278"
-  }
+  "902000006": { "characterName": "ANDREW", "headPics": "902000006" },
+  "902000007": { "characterName": "KELLY", "headPics": "902000007" },
+  "902000008": { "characterName": "OLIVIA", "headPics": "902000008" },
+  "902000009": { "characterName": "FORD", "headPics": "902000009" },
+  "902000010": { "characterName": "NIKITA", "headPics": "902000010" },
+  "902000012": { "characterName": "MISHA", "headPics": "902000012" },
+  "902000030": { "characterName": "MAXIM", "headPics": "902000030" },
+  "902000062": { "characterName": "KLA", "headPics": "902000062" },
+  "902000080": { "characterName": "PALOMA", "headPics": "902000080" },
+  "902000081": { "characterName": "MIGUEL", "headPics": "902000081" },
+  "902000096": { "characterName": "CAROLINE", "headPics": "902000096" },
+  "902000102": { "characterName": "ANTONI", "headPics": "902000102" },
+  "902000110": { "characterName": "WUKONG", "headPics": "902000110" },
+  "902000119": { "characterName": "MOCO", "headPics": "902000119" },
+  "902000130": { "characterName": "HAYATO", "headPics": "902000130" },
+  "902000167": { "characterName": "LAURA", "headPics": "902000167" },
+  "902000182": { "characterName": "RAFAEL", "headPics": "902000182" },
+  "902000201": { "characterName": "A124", "headPics": "902000201" },
+  "902000219": { "characterName": "SHANI", "headPics": "902000219" },
+  "902000220": { "characterName": "ALOK", "headPics": "902000220" },
+  "902000240": { "characterName": "ALVARO", "headPics": "902000240" },
+  "902000278": { "characterName": "JOTA", "headPics": "902000278" },
+  "902000279": { "characterName": "STEFFIE", "headPics": "902000279" },
+  "902000298": { "characterName": "LUQUETA", "headPics": "902000298" },
+  "902000299": { "characterName": "KAPPELA", "headPics": "902000299" },
+  "902000318": { "characterName": "WOLF", "headPics": "902000318" },
+  "902000319": { "characterName": "CLU", "headPics": "902000319" },
+  "902000350": { "characterName": "DASHA", "headPics": "902000350" },
+  "902000351": { "characterName": "K", "headPics": "902000351" },
+  "902000367": { "characterName": "CHRONO", "headPics": "902000367" },
+  "902026007": { "characterName": "SKYLER", "headPics": "902026007" },
+  "902026008": { "characterName": "SHIROU", "headPics": "902026008" },
+  "902027008": { "characterName": "SAYNE", "headPics": "902027008" },
+  "902029007": { "characterName": "DIMITRI", "headPics": "902029007" },
+  "902029008": { "characterName": "THIVA", "headPics": "902029008" },
+  "902030007": { "characterName": "LEON", "headPics": "902030007" },
+  "902030008": { "characterName": "OTHO", "headPics": "902030008" },
+  "902031007": { "characterName": "NAITRI", "headPics": "902031007" },
+  "902034024": { "characterName": "A-PATROA", "headPics": "902034024" },
+  "902034026": { "characterName": "HOMER", "headPics": "902034026" },
+  "902035009": { "characterName": "IRIS", "headPics": "902035009" },
+  "902035016": { "characterName": "J.BIEBS", "headPics": "902035016" },
+  "902036007": { "characterName": "TATSUYA", "headPics": "902036007" },
+  "902036022": { "characterName": "LUNA", "headPics": "902036022" },
+  "902038005": { "characterName": "SATINO", "headPics": "902038005" },
+  "902039007": { "characterName": "ORION", "headPics": "902039007" },
+  "902040005": { "characterName": "SONIA", "headPics": "902040005" },
+  "902041004": { "characterName": "SUZY", "headPics": "902041004" },
+  "902042003": { "characterName": "IGNIS", "headPics": "902042003" },
+  "902043007": { "characterName": "RYDER", "headPics": "902043007" },
+  "902047005": { "characterName": "KODA", "headPics": "902047005" },
+  "902048005": { "characterName": "OSCA", "headPics": "902048005" },
+  "902051001": { "characterName": "NERO", "headPics": "902051001" },
+  "902052025": { "characterName": "MORSE", "headPics": "902052025" }
 }
