@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && copyfiles -u 1 \"src/assets/**/*\" dist/",
     "start": "npm run build && node ./dist/index.js",
     "prepare": "npm run build"
   },
@@ -15,15 +15,24 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "canvas": "^3.2.3",
     "chalk": "^4.1.2",
+    "cli-progress": "^3.12.0",
     "commander": "^14.0.3",
     "figlet": "^1.11.0",
-    "gradient-string": "^3.0.0"
+    "gradient-string": "^3.0.0",
+    "image-size": "^2.0.2",
+    "path": "^0.12.7",
+    "sharp": "^0.34.5"
   },
   "devDependencies": {
+    "@types/cli-progress": "^3.11.6",
     "@types/figlet": "^1.7.0",
     "@types/gradient-string": "^1.1.6",
+    "@types/image-size": "^0.7.0",
     "@types/node": "^25.6.0",
+    "@types/sharp": "^0.31.1",
+    "copyfiles": "^2.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
   }
