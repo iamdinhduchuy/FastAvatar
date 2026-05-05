@@ -1,5 +1,5 @@
 {
   "displayName": "FastAvatar",
-  "version": "1.0.0",
+  "version": "1.0.2-rc1",
   "description": "A CLI tool to automatically create avatars config for Free Fire (PC Client)"
 }
