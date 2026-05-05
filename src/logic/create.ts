@@ -1,11 +1,36 @@
+import path from "node:path";
+import { getValidImages } from "../cores/checkImage";
+import Converter from "../cores/converter";
+import { createTeamTableImage } from "../cores/draw";
+import { logger } from "../utils/logger";
+
 interface CreateOptions {
   output?: string;
   league?: boolean;
 }
 
-export default function CreateLogicCommand(options: CreateOptions) {
+export default async function CreateLogicCommand(options: CreateOptions) {
   const { output, league } = options;
-  console.log("Creating avatar configuration...");
-  console.log(`Output: ${output || "default path"}`);
-  console.log(`League format: ${league ? "Yes" : "No"}`);
+  const workingPath = process.cwd();
+
+  const validImageFiles = await getValidImages(workingPath);
+
+  const drawTableDataRes = await Converter.run(
+    validImageFiles.map((file) => file.name),
+    { leagueFlag: league || false },
+    workingPath,
+  );
+
+  logger.info("Creating team table image...");
+
+  try {
+    createTeamTableImage(
+      drawTableDataRes.drawTableData,
+      path.join(workingPath, "team_table.png"),
+    );
+  } catch (error) {
+    logger.error(
+      "Failed to create team table image: " + (error as Error).message,
+    );
+  }
 }
