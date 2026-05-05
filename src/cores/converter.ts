@@ -6,11 +6,26 @@ import fs from "node:fs/promises";
 import fsSync from "fs";
 import path from "path";
 import { TeamData } from "./draw";
+import { CHARACTERS_IMAGES_PATH } from "../constants/path";
 
 export interface ConverterOptions {
   leagueFlag?: boolean;
   padding?: number;
 }
+
+type AlphaBounds = {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+};
+
+type RawBounds = {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+};
 
 class Converter {
   #folders = {
@@ -20,6 +35,183 @@ class Converter {
   };
 
   #sizes = { head: 110, gloowall: 1000, backpack: 1000 };
+
+  private pickTightestBounds(boundsList: Array<RawBounds | null>) {
+    const validBounds = boundsList.filter(Boolean) as RawBounds[];
+
+    if (validBounds.length === 0) {
+      return null;
+    }
+
+    return validBounds.reduce((tightest, current) => {
+      const tightestArea = tightest.width * tightest.height;
+      const currentArea = current.width * current.height;
+
+      return currentArea < tightestArea ? current : tightest;
+    });
+  }
+
+  private async getContentBounds(
+    inputBuffer: Buffer,
+  ): Promise<RawBounds | null> {
+    const metadata = await sharp(inputBuffer).metadata();
+
+    if (metadata.width === undefined || metadata.height === undefined) {
+      return null;
+    }
+
+    const width = metadata.width;
+    const height = metadata.height;
+
+    const scanAlphaBounds = async (): Promise<RawBounds | null> => {
+      const { data, info } = await sharp(inputBuffer)
+        .ensureAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true });
+
+      const alphaThreshold = 10;
+      const channels = info.channels;
+
+      let left = width;
+      let top = height;
+      let right = -1;
+      let bottom = -1;
+
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const alphaIndex = (y * width + x) * channels + 3;
+          if (data[alphaIndex] > alphaThreshold) {
+            if (x < left) left = x;
+            if (y < top) top = y;
+            if (x > right) right = x;
+            if (y > bottom) bottom = y;
+          }
+        }
+      }
+
+      if (right === -1 || bottom === -1) {
+        return null;
+      }
+
+      return {
+        left,
+        top,
+        width: right - left + 1,
+        height: bottom - top + 1,
+      };
+    };
+
+    const scanBackgroundBounds = async (): Promise<RawBounds | null> => {
+      const { data, info } = await sharp(inputBuffer).raw().toBuffer({
+        resolveWithObject: true,
+      });
+
+      const channels = info.channels;
+      const background = [data[0], data[1], data[2]];
+      const differenceThreshold = 18;
+      const thresholdSquared = differenceThreshold * differenceThreshold;
+
+      let left = width;
+      let top = height;
+      let right = -1;
+      let bottom = -1;
+
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const pixelIndex = (y * width + x) * channels;
+          const red = data[pixelIndex];
+          const green = data[pixelIndex + 1];
+          const blue = data[pixelIndex + 2];
+
+          const diffSquared =
+            (red - background[0]) * (red - background[0]) +
+            (green - background[1]) * (green - background[1]) +
+            (blue - background[2]) * (blue - background[2]);
+
+          if (diffSquared > thresholdSquared) {
+            if (x < left) left = x;
+            if (y < top) top = y;
+            if (x > right) right = x;
+            if (y > bottom) bottom = y;
+          }
+        }
+      }
+
+      if (right === -1 || bottom === -1) {
+        return null;
+      }
+
+      return {
+        left,
+        top,
+        width: right - left + 1,
+        height: bottom - top + 1,
+      };
+    };
+
+    const scanLuminanceBounds = async (): Promise<RawBounds | null> => {
+      const { data, info } = await sharp(inputBuffer)
+        .ensureAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true });
+
+      const channels = info.channels;
+      const luminanceThreshold = 28;
+
+      let left = width;
+      let top = height;
+      let right = -1;
+      let bottom = -1;
+
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const pixelIndex = (y * width + x) * channels;
+          const red = data[pixelIndex];
+          const green = data[pixelIndex + 1];
+          const blue = data[pixelIndex + 2];
+          const alpha = data[pixelIndex + 3];
+
+          const luminance =
+            0.2126 * red + 0.7152 * green + 0.0722 * blue;
+
+          if (alpha > 10 || luminance > luminanceThreshold) {
+            if (x < left) left = x;
+            if (y < top) top = y;
+            if (x > right) right = x;
+            if (y > bottom) bottom = y;
+          }
+        }
+      }
+
+      if (right === -1 || bottom === -1) {
+        return null;
+      }
+
+      return {
+        left,
+        top,
+        width: right - left + 1,
+        height: bottom - top + 1,
+      };
+    };
+
+
+    if (metadata.hasAlpha) {
+      const alphaBounds = await scanAlphaBounds();
+
+      if (
+        alphaBounds &&
+        alphaBounds.width * alphaBounds.height < width * height * 0.98
+      ) {
+        return alphaBounds;
+      }
+    }
+
+    return this.pickTightestBounds([
+      await scanBackgroundBounds(),
+      await scanLuminanceBounds(),
+    ]);
+  }
 
   private async processImage(
     inputBuffer: Buffer,
@@ -33,9 +225,14 @@ class Converter {
     if (leagueFlag) {
       const finalPadding = specificPadding;
       const contentSize = size - finalPadding * 2;
+      const contentBounds = await this.getContentBounds(inputBuffer);
+      let contentPipeline = sharp(inputBuffer).ensureAlpha();
 
-      return pipeline
-        .trim()
+      if (contentBounds) {
+        contentPipeline = contentPipeline.extract(contentBounds);
+      }
+
+      return contentPipeline
         .resize({
           width: contentSize,
           height: contentSize,
@@ -127,7 +324,7 @@ class Converter {
               teamName: file.split(".").slice(0, -1).join("."),
               charName: (HeadPicsIDs as any)[id]?.characterName || "",
               logoPath: inputPath,
-              headPicPath: path.join(cwd, this.#folders.gloowall, `${id}.png`),
+              headPicPath: path.join(CHARACTERS_IMAGES_PATH, `${id}.png`),
             });
 
             successFiles.push(file);

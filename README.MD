@@ -13,8 +13,8 @@ FastAvatar automates the entire process:
 1. **Scans** the current working directory for any valid image files (JPG, PNG, WEBP, etc.).
 2. **Converts and resizes** each image into three versions required by the Free Fire PC Client:
    - **HeadPics** — 110×110 px (player avatar)
-   - **GloowallPics** — 1000×1000 px (glow wall banner)
-   - **BackPackPics** — 1000×1000 px (backpack skin)
+   - **GloowallPics** — 1000×1000 px (Gloowall banner)
+   - **BackPackPics** — 1000×1000 px (BackPack skin)
 3. **Names** each output file according to the internal `headPics` ID mapping used by the client.
 4. **Generates** a `team_table.png` summary image — a 2560 px wide table showing each team's logo, full name, and assigned avatar character name — ready for use as a match reference sheet.
 
@@ -32,7 +32,7 @@ Working Directory
     ├── HeadPics/
     │   ├── <id>.png   ← 110px avatar
     ├── GloowallPics/
-    │   ├── <id>.png   ← 1000px glow wall
+    │   ├── <id>.png   ← 1000px Gloowall
     ├── BackPackPics/
     │   ├── <id>.png   ← 1000px backpack
     └── team_table.png ← summary reference image
@@ -129,8 +129,8 @@ After running, the following will be generated inside your working directory:
 | Path | Description |
 |------|-------------|
 | `HeadPics/<id>.png` | 110px player avatar |
-| `GloowallPics/<id>.png` | 1000px glow wall image |
-| `BackPackPics/<id>.png` | 1000px backpack skin image |
+| `GloowallPics/<id>.png` | 1000px Gloowall image |
+| `BackPackPics/<id>.png` | 1000px BackPack skin image |
 | `team_table.png` | Summary reference table (2560px wide PNG) |
 
 Copy the generated `HeadPics`, `GloowallPics`, and `BackPackPics` folders into the appropriate directory of the Free Fire PC Client software.
