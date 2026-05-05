@@ -14,6 +14,11 @@ const registerCreateCommand: IRegisterCommandFunction = (program) => {
       "--league",
       "Use to want the format of the avatar is a eSports League",
     )
+    .option(
+      "-p",
+      "--padding <number>",
+      "Specify the padding around the avatar image when league flag",
+    )
     .action((options) => CreateLogicCommand({ ...options }));
 };
 

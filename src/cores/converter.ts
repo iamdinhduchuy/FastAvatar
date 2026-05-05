@@ -7,18 +7,57 @@ import fsSync from "fs";
 import path from "path";
 import { TeamData } from "./draw";
 
+export interface ConverterOptions {
+  leagueFlag?: boolean;
+  padding?: number;
+}
+
 class Converter {
   #folders = {
     head: "HeadPics",
-    glowall: "GloowallPics",
+    gloowall: "GloowallPics",
     backpack: "BackPackPics",
   };
 
-  #sizes = { head: 110, glowall: 1000, backpack: 1000 };
+  #sizes = { head: 110, gloowall: 1000, backpack: 1000 };
+
+  private async processImage(
+    inputBuffer: Buffer,
+    size: number,
+    options: ConverterOptions,
+    specificPadding: number = 0,
+  ) {
+    const { leagueFlag } = options;
+    const pipeline = sharp(inputBuffer);
+
+    if (leagueFlag) {
+      const finalPadding = specificPadding;
+      const contentSize = size - finalPadding * 2;
+
+      return pipeline
+        .trim()
+        .resize({
+          width: contentSize,
+          height: contentSize,
+          fit: "contain",
+          background: { r: 0, g: 0, b: 0, alpha: 0 },
+        })
+        .extend({
+          top: finalPadding,
+          bottom: finalPadding,
+          left: finalPadding,
+          right: finalPadding,
+          background: { r: 0, g: 0, b: 0, alpha: 0 },
+        })
+        .toBuffer();
+    } else {
+      return pipeline.resize(size, size, { fit: "fill" }).toBuffer();
+    }
+  }
 
   async run(
     files: string[],
-    options: any,
+    options: ConverterOptions,
     cwd: string,
   ): Promise<{
     successFiles: string[];
@@ -28,9 +67,11 @@ class Converter {
     const arrayID = Object.values(HeadPicsIDs)
       .map((item) => item.headPics)
       .flat();
+
     if (files.length > arrayID.length) {
-      throw new Error(`Too many file! Maximum is ${arrayID.length} photos.`);
+      throw new Error(`Too many files! Maximum is ${arrayID.length} photos.`);
     }
+
     const paths = Object.values(this.#folders).map((f) => path.join(cwd, f));
     paths.forEach(
       (p) => !fsSync.existsSync(p) && fsSync.mkdirSync(p, { recursive: true }),
@@ -55,33 +96,43 @@ class Converter {
 
           try {
             const imageBuffer = await fs.readFile(inputPath);
-            const pipeline = sharp(imageBuffer);
+
+            const [headBuf, gloowallBuf, backpackBuf] = await Promise.all([
+              this.processImage(imageBuffer, this.#sizes.head, options, 0),
+              this.processImage(imageBuffer, this.#sizes.gloowall, options, 0),
+              this.processImage(
+                imageBuffer,
+                this.#sizes.backpack,
+                options,
+                options.leagueFlag ? 30 : 0,
+              ),
+            ]);
 
             await Promise.all([
-              pipeline
-                .clone()
-                .resize(this.#sizes.head)
-                .toFile(path.join(cwd, this.#folders.head, `${id}.png`)),
-              pipeline
-                .clone()
-                .resize(this.#sizes.glowall)
-                .toFile(path.join(cwd, this.#folders.glowall, `${id}.png`)),
-              pipeline
-                .clone()
-                .resize(this.#sizes.backpack)
-                .toFile(path.join(cwd, this.#folders.backpack, `${id}.png`)),
+              fs.writeFile(
+                path.join(cwd, this.#folders.head, `${id}.png`),
+                headBuf,
+              ),
+              fs.writeFile(
+                path.join(cwd, this.#folders.gloowall, `${id}.png`),
+                gloowallBuf,
+              ),
+              fs.writeFile(
+                path.join(cwd, this.#folders.backpack, `${id}.png`),
+                backpackBuf,
+              ),
             ]);
 
             drawTableData.push({
               teamName: file.split(".").slice(0, -1).join("."),
-              charName:
-                HeadPicsIDs[id as keyof typeof HeadPicsIDs].characterName || "",
-              logoPath: path.join(cwd, file),
-              headPicPath: path.join(cwd, this.#folders.glowall, `${id}.png`),
+              charName: (HeadPicsIDs as any)[id]?.characterName || "",
+              logoPath: inputPath,
+              headPicPath: path.join(cwd, this.#folders.gloowall, `${id}.png`),
             });
 
             successFiles.push(file);
           } catch (err) {
+            logger.error(`Lỗi xử lý file ${file}: ${err}`);
             errorFiles.push(file);
           } finally {
             bar.increment();
@@ -91,10 +142,7 @@ class Converter {
     }
 
     bar.stop();
-    logger.success(
-      `Xử lý xong: ${successFiles.length} thành công, ${errorFiles.length} thất bại.`,
-    );
-
+    logger.success(`Xử lý hoàn tất: ${successFiles.length} thành công.`);
     return { successFiles, errorFiles, drawTableData };
   }
 }
