@@ -47,7 +47,7 @@ if defined NODEJS_DIR set "PATH=%NODEJS_DIR%;%PATH%"
 
 echo.
 echo [2/4] Installing dependencies...
-call npm install --ignore-scripts
+call npm ci --ignore-scripts
 if errorlevel 1 (
     echo [X] npm install failed.
     pause

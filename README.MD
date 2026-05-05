@@ -154,7 +154,6 @@ This is useful for tournament staff to quickly verify avatar assignments during 
 | Package | Purpose |
 |---------|---------|
 | [sharp](https://sharp.pixelplumbing.com/) | High-performance image conversion and resizing |
-| [canvas](https://github.com/Automattic/node-canvas) | Drawing the team table summary image |
 | [commander](https://github.com/tj/commander.js) | CLI argument parsing |
 | [chalk](https://github.com/chalk/chalk) | Terminal color output |
 | [cli-progress](https://github.com/npkgz/cli-progress) | Progress bar during batch processing |
