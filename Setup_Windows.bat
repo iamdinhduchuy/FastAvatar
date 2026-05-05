@@ -52,7 +52,15 @@ if %errorlevel% neq 0 (
 echo [OK] CLI linked successfully.
 
 echo.
-echo [4/4] Finalizing...
+echo [4/4] Build project...
+call npm run build
+if %errorlevel% neq 0 (
+    echo [X] Build project is failed! Report issue or download Release Build at repo iamdinhduchuy/FastAvatar.
+    pause
+    exit /b
+)
+
+echo.
 echo --- Setup Complete ---
 echo You can now use the CLI command defined in your package.json.
 echo.
